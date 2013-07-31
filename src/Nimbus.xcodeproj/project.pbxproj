@@ -763,7 +763,7 @@
 		6675731F13E771380076F555 /* NimbusInterappTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NimbusInterappTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6675733713E7718B0076F555 /* deps */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = deps; path = interapp/deps; sourceTree = SOURCE_ROOT; };
 		6675733B13E7718B0076F555 /* NIInterapp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NIInterapp.h; sourceTree = "<group>"; };
-		6675733C13E7718B0076F555 /* NIInterapp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NIInterapp.m; sourceTree = "<group>"; };
+		6675733C13E7718B0076F555 /* NIInterapp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = NIInterapp.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		6675734313E772100076F555 /* NimbusInterappTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NimbusInterappTests-Info.plist"; sourceTree = "<group>"; };
 		6675734413E773AA0076F555 /* NimbusInterapp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NimbusInterapp.h; sourceTree = "<group>"; };
 		6675E4B11455FCC5007D172F /* NIViewRecycler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NIViewRecycler.h; sourceTree = "<group>"; };

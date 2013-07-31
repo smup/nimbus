@@ -40,6 +40,8 @@
 
 + (BOOL)googleChromeIsInstalled;
 + (BOOL)googleChromeWithURL:(NSURL *)url;
++ (BOOL)googleChromeWithURL:(NSURL *)url withCallbackURL:(NSURL*)callbackURL createNewTab:(BOOL)createNewTab;
+
 + (NSString *)googleChromeAppStoreId;
 
 #pragma mark Google Maps

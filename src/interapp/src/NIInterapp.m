@@ -86,6 +86,7 @@ BOOL sPreferGoogleChrome = NO;
 
 static NSString* const sGoogleChromeHttpScheme = @"googlechrome:";
 static NSString* const sGoogleChromeHttpsScheme = @"googlechomes:";
+static NSString* const sGoogleChromeCallbackScheme =  @"googlechrome-x-callback:";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 + (BOOL)googleChromeIsInstalled {
@@ -117,6 +118,83 @@ static NSString* const sGoogleChromeHttpsScheme = @"googlechomes:";
 
     return NO;
 }
+
+static NSString * encodeByAddingPercentEscapes(NSString *input) {
+    NSString *encodedValue =
+    (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(
+                                                        kCFAllocatorDefault,
+                                                        (CFStringRef)input,
+                                                        NULL,
+                                                        (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                        kCFStringEncodingUTF8));
+    return encodedValue;
+}
+
+//
+// imported from https://github.com/GoogleChrome/OpenInChrome
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////
++ (BOOL)googleChromeWithURL:(NSURL *)url withCallbackURL:(NSURL*)callbackURL createNewTab:(BOOL)createNewTab {
+    NSURL *chromeSimpleURL = [NSURL URLWithString:sGoogleChromeHttpScheme];
+    NSURL *chromeCallbackURL = [NSURL URLWithString:sGoogleChromeCallbackScheme];
+    if ([[UIApplication sharedApplication] canOpenURL:chromeCallbackURL]) {
+        NSString *appName =
+        [[NSBundle mainBundle]
+         objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+        
+        NSString *scheme = [url.scheme lowercaseString];
+        
+        // Proceed only if scheme is http or https.
+        if ([scheme isEqualToString:@"http"] ||
+            [scheme isEqualToString:@"https"]) {
+            
+            NSMutableString *chromeURLString = [NSMutableString string];
+            [chromeURLString appendFormat:
+             @"%@//x-callback-url/open/?x-source=%@&url=%@",
+             sGoogleChromeCallbackScheme,
+             encodeByAddingPercentEscapes(appName),
+             encodeByAddingPercentEscapes([url absoluteString])];
+            if (callbackURL) {
+                [chromeURLString appendFormat:@"&x-success=%@",
+                 encodeByAddingPercentEscapes([callbackURL absoluteString])];
+            }
+            if (createNewTab) {
+                [chromeURLString appendString:@"&create-new-tab"];
+            }
+            
+            NSURL *chromeURL = [NSURL URLWithString:chromeURLString];
+            
+            // Open the URL with Google Chrome.
+            return [[UIApplication sharedApplication] openURL:chromeURL];
+        }
+    } else if ([[UIApplication sharedApplication] canOpenURL:chromeSimpleURL]) {
+        NSString *scheme = [url.scheme lowercaseString];
+        
+        // Replace the URL Scheme with the Chrome equivalent.
+        NSString *chromeScheme = nil;
+        if ([scheme isEqualToString:@"http"]) {
+            chromeScheme = sGoogleChromeHttpScheme;
+        } else if ([scheme isEqualToString:@"https"]) {
+            chromeScheme = sGoogleChromeHttpsScheme;
+        }
+        
+        // Proceed only if a valid Google Chrome URI Scheme is available.
+        if (chromeScheme) {
+            NSString *absoluteString = [url absoluteString];
+            NSRange rangeForScheme = [absoluteString rangeOfString:@":"];
+            NSString *urlNoScheme =
+            [absoluteString substringFromIndex:rangeForScheme.location + 1];
+            NSString *chromeURLString =
+            [chromeScheme stringByAppendingString:urlNoScheme];
+            NSURL *chromeURL = [NSURL URLWithString:chromeURLString];
+            
+            // Open the URL with Google Chrome.
+            return [[UIApplication sharedApplication] openURL:chromeURL];
+        }
+    }
+    return NO;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 + (NSString *)googleChromeAppStoreId {
