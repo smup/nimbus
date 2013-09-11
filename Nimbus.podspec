@@ -24,6 +24,7 @@ Pod::Spec.new do |s|
                   'simple to understand.'
 
   s.platform = :ios, '5.0'
+	s.compiler_flags = '-w'
 
   s.requires_arc = true
 
